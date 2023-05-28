@@ -12,6 +12,10 @@
     </div>
 
     <script>
+      // Il de Ré
+      // longitude <- c(-1.72, -1.036)
+      // latitude <- c(46.36, 46.023)
+
       //   // could move all this into a class
       const CM = 118; // 1cm in pixels at 300
       const FRAME_WIDTH = 3543; // Whole picture to be this many pixels in width which is 30cm at 300dpi
@@ -20,7 +24,7 @@
       const WIDTH = FRAME_WIDTH - 2 * MARGIN;
       const HEIGHT = FRAME_HEIGHT - 2 * MARGIN;
 
-      const MAP_SCALE = 125000; // sets the zoom for the map
+      const MAP_SCALE = 20000; // sets the zoom for the map
       const GRATICULE_DEGREE_STEP = [0.4, 0.2]; // sets the intervals for longitude and latitude graticules in degree steps
 
       const COLOUR_MARGIN = "#293743";
@@ -34,12 +38,13 @@
       const ISLAND_FONT = "Big Caslon";
 
       const MAP_BORDER_THICKNESS = 10;
+      const WATER_SHADOW_BLUR_THICKNESS = 10;
 
       const MAP_BOUNDING_COORDS = {
-        topX: -3.8, // longitude (minus is west of 0 - London)
-        topY: 56.48, // latitude (higher is more northerly)
-        bottomX: -2.49, // longitude
-        bottomY: 55.95, // latitude
+        topX: -1.72, // longitude (minus is west of 0 - London)
+        topY: 46.36, // latitude (higher is more northerly)
+        bottomX: -1.036, // longitude
+        bottomY: 46.023, // latitude
       };
 
       // setup the svg
@@ -80,7 +85,10 @@
         .translate([WIDTH / 2, HEIGHT / 2]);
 
       // setup the geopath generator
-      const geoPathGenerator = d3.geoPath().projection(projection).context();
+      const geoPathGenerator = d3
+        .geoPath()
+        .projection(projection)
+        .context(context);
 
       // set up data for later use
       let longitudeGraticuleCoords;
@@ -101,9 +109,30 @@
         ]);
       }
 
+      function drawPolygons(coordinates) {}
+
       function drawSea() {
         context.fillStyle = COLOUR_WATER;
         context.fillRect(0, 0, WIDTH, HEIGHT);
+      }
+
+      function drawCoastline() {
+        // context.fillStyle = COLOUR_LAND;
+        // context.shadowBlur = WATER_SHADOW_BLUR_THICKNESS;
+        // context.shadowColor = COLOUR_WATER_SHADOW;
+
+        context.beginPath();
+
+        coastline.features.forEach((feature) => {
+          //   geoPathGenerator(feature);
+          console.log("drawing");
+
+          if (feature.geometry.type === "Polygon") {
+          }
+        });
+
+        context.stroke();
+        // context.fill();
       }
 
       async function drawMap() {
@@ -112,6 +141,7 @@
         console.log({ coastline });
 
         drawSea();
+        drawCoastline();
       }
 
       drawMap();
