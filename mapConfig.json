@@ -1,0 +1,11 @@
+{
+  "dimensions": {
+    "pixelsPerCm": 118,
+    "frameWidth": 3543,
+    "frameHeight": null
+  },
+  "colours": {
+    "margin": "#293743",
+    "sea": "#3a4f5f"
+  }
+}

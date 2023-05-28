@@ -4,14 +4,15 @@
     <meta charset="UTF-8" />
     <title>Map Generator</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- <script  src="./renderer.js"></script> -->
   </head>
   <body>
     <div id="frame">
-      <svg></svg>
+      <!-- <svg></svg> -->
     </div>
 
     <script>
-      // could move all this into a class
+      //   // could move all this into a class
       const CM = 118; // 1cm in pixels at 300
       const FRAME_WIDTH = 3543; // Whole picture to be this many pixels in width which is 30cm at 300dpi
       const FRAME_HEIGHT = FRAME_WIDTH * 0.66; // // this is the ratio for the height to be correct based on the map
@@ -41,6 +42,18 @@
         bottomY: 55.95, // latitude
       };
 
+      // setup the svg
+      const svg = d3
+        .select("#frame")
+        .append("svg")
+        .attr("id", "map-svg")
+        .style("position", "absolute")
+        .attr("width", FRAME_WIDTH)
+        .attr("height", FRAME_HEIGHT);
+      // .attr("transform", `translate(${MARGIN}, ${MARGIN})`);
+
+      const g = svg.append("g");
+
       // setup the canvas
       const canvas = d3
         .select("#frame")
@@ -56,17 +69,6 @@
       // shift the 0,0 starting point for rendering to the edge of the margin
       context.setTransform(1, 0, 0, 1, MARGIN, MARGIN);
 
-      // setup the svg
-      const svg = d3
-        .select("#frame")
-        .append("svg")
-        .attr("id", "map-svg")
-        .attr("width", FRAME_WIDTH)
-        .attr("height", FRAME_HEIGHT)
-        .attr("transform", `translate(${MARGIN}, ${MARGIN})`);
-
-      const g = svg.append("g");
-
       // setup the projection
       const projection = d3
         .geoMercator()
@@ -76,6 +78,28 @@
           [(MAP_BOUNDING_COORDS.bottomX + MAP_BOUNDING_COORDS.bottomY) / 2]
         )
         .translate([WIDTH / 2, HEIGHT / 2]);
+
+      // setup the geopath generator
+      const geoPathGenerator = d3.geoPath().projection(projection).context();
+
+      // set up data for later use
+
+      let longitudeGraticuleCoords;
+      let latitudeGraticuleCoords;
+
+      let coastline;
+      let contours;
+      let water_lines;
+      let water_polygons;
+      let roads;
+      let cities;
+      let forests;
+      let island_points;
+
+      function drawSea() {
+        context.fillStyle = COLOUR_WATER;
+        context.fillRect(0, 0, WIDTH, HEIGHT);
+      }
     </script>
   </body>
 </html>
