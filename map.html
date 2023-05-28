@@ -24,7 +24,7 @@
       const WIDTH = FRAME_WIDTH - 2 * MARGIN;
       const HEIGHT = FRAME_HEIGHT - 2 * MARGIN;
 
-      const MAP_SCALE = 20000; // sets the zoom for the map
+      const MAP_SCALE = 400000; // sets the zoom for the map
       const GRATICULE_DEGREE_STEP = [0.4, 0.2]; // sets the intervals for longitude and latitude graticules in degree steps
 
       const COLOUR_MARGIN = "#293743";
@@ -48,16 +48,16 @@
       };
 
       // setup the svg
-      const svg = d3
-        .select("#frame")
-        .append("svg")
-        .attr("id", "map-svg")
-        .style("position", "absolute")
-        .attr("width", FRAME_WIDTH)
-        .attr("height", FRAME_HEIGHT);
-      // .attr("transform", `translate(${MARGIN}, ${MARGIN})`);
+      //   const svg = d3
+      //     .select("#frame")
+      //     .append("svg")
+      //     .attr("id", "map-svg")
+      //     .style("position", "absolute")
+      //     .attr("width", FRAME_WIDTH)
+      //     .attr("height", FRAME_HEIGHT);
+      //   // .attr("transform", `translate(${MARGIN}, ${MARGIN})`);
 
-      const g = svg.append("g");
+      //   const g = svg.append("g");
 
       // setup the canvas
       const canvas = d3
@@ -78,10 +78,10 @@
       const projection = d3
         .geoMercator()
         .scale(MAP_SCALE)
-        .center(
-          [(MAP_BOUNDING_COORDS.topX + MAP_BOUNDING_COORDS.topY) / 2],
-          [(MAP_BOUNDING_COORDS.bottomX + MAP_BOUNDING_COORDS.bottomY) / 2]
-        )
+        .center([
+          (MAP_BOUNDING_COORDS.topX + MAP_BOUNDING_COORDS.bottomX) / 2 - 0.05,
+          (MAP_BOUNDING_COORDS.topY + MAP_BOUNDING_COORDS.bottomY) / 2,
+        ])
         .translate([WIDTH / 2, HEIGHT / 2]);
 
       // setup the geopath generator
@@ -109,7 +109,20 @@
         ]);
       }
 
-      function drawPolygons(coordinates) {}
+      function drawPolygons(coordinates) {
+        coordinates.forEach((coords) => {
+          coords.forEach((point, i) => {
+            console.log("drawing");
+            const [x, y] = projection(point);
+            if (i === 0) {
+              context.moveTo(x, y);
+            } else {
+              context.lineTo(x, y);
+            }
+          });
+        });
+        context.closePath();
+      }
 
       function drawSea() {
         context.fillStyle = COLOUR_WATER;
@@ -117,22 +130,22 @@
       }
 
       function drawCoastline() {
-        // context.fillStyle = COLOUR_LAND;
-        // context.shadowBlur = WATER_SHADOW_BLUR_THICKNESS;
-        // context.shadowColor = COLOUR_WATER_SHADOW;
+        context.fillStyle = COLOUR_LAND;
+        context.shadowBlur = WATER_SHADOW_BLUR_THICKNESS;
+        context.shadowColor = COLOUR_WATER_SHADOW;
 
         context.beginPath();
 
         coastline.features.forEach((feature) => {
           //   geoPathGenerator(feature);
-          console.log("drawing");
 
           if (feature.geometry.type === "Polygon") {
+            drawPolygons(feature.geometry.coordinates);
           }
         });
 
         context.stroke();
-        // context.fill();
+        context.fill();
       }
 
       async function drawMap() {
