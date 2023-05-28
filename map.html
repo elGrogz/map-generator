@@ -95,12 +95,22 @@
       let forests;
       let island_points;
 
+      async function fetchGeoData() {
+        await Promise.all([
+          (coastline = await d3.json("./data/il-de-re-coastline.geojson")),
+        ]);
+      }
+
       function drawSea() {
         context.fillStyle = COLOUR_WATER;
         context.fillRect(0, 0, WIDTH, HEIGHT);
       }
 
-      function drawMap() {
+      async function drawMap() {
+        await fetchGeoData();
+
+        console.log({ coastline });
+
         drawSea();
       }
 
