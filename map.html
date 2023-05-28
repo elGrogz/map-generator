@@ -10,6 +10,47 @@
       <svg id="map-svg"></svg>
     </div>
 
-    <script></script>
+    <script>
+      // could move all this into a class
+      const CM = 118; // 1cm in pixels at 300
+      const FRAME_WIDTH = 3543; // Whole picture to be this many pixels in width which is 30cm at 300dpi
+      const FRAME_HEIGHT = FRAME_WIDTH * 0.66; // // this is the ratio for the height to be correct based on the map
+      const MARGIN = CM;
+      const WIDTH = FRAME_WIDTH - 2 * MARGIN;
+      const HEIGHT = FRAME_HEIGHT - 2 * MARGIN;
+
+      const MAP_SCALE = 125000; // sets the zoom for the map
+      const GRATICULE_DEGREE_STEP = [0.4, 0.2]; // sets the intervals for longitude and latitude graticules in degree steps
+
+      const COLOUR_MARGIN = "#293743";
+      const COLOUR_MAP_BORDER = "#2e3f4c";
+      const COLOUR_WATER = "#3a4f5f";
+      const COLOUR_WATER_SHADOW = "#080b0e";
+      const COLOUR_LAND = "#c9dfe7";
+      const COLOUR_ISLAND_LABEL = "#9F8772";
+
+      const CITY_FONT = "Gill Sans";
+      const ISLAND_FONT = "Big Caslon";
+
+      const MAP_BORDER_THICKNESS = 10;
+
+      const MAP_BOUNDING_COORDS = {
+        topX: -3.8, // longitude (minus is west of 0 - London)
+        topY: 56.48, // latitude (higher is more northerly)
+        bottomX: -2.49, // longitude
+        bottomY: 55.95, // latitude
+      };
+
+      // get the canvas
+      const canvas = d3
+        .select("#frame")
+        .append("canvas")
+        .attr("width", FRAME_WIDTH)
+        .attr("height", FRAME_HEIGHT)
+        .style("background-color", COLOUR_MARGIN);
+
+      // get the canvas context so it can be passed into the geopath renderer
+      const context = canvas.node().getContext("2d");
+    </script>
   </body>
 </html>
