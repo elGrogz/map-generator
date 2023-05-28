@@ -66,6 +66,16 @@
         .attr("transform", `translate(${MARGIN}, ${MARGIN})`);
 
       const g = svg.append("g");
+
+      // setup the projection
+      const projection = d3
+        .geoMercator()
+        .scale(MAP_SCALE)
+        .center(
+          [(MAP_BOUNDING_COORDS.topX + MAP_BOUNDING_COORDS.topY) / 2],
+          [(MAP_BOUNDING_COORDS.bottomX + MAP_BOUNDING_COORDS.bottomY) / 2]
+        )
+        .translate([WIDTH / 2, HEIGHT / 2]);
     </script>
   </body>
 </html>
