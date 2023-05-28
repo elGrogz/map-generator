@@ -7,7 +7,7 @@
   </head>
   <body>
     <div id="frame">
-      <svg id="map-svg"></svg>
+      <svg></svg>
     </div>
 
     <script>
@@ -41,16 +41,31 @@
         bottomY: 55.95, // latitude
       };
 
-      // get the canvas
+      // setup the canvas
       const canvas = d3
         .select("#frame")
         .append("canvas")
+        .attr("id", "map-canvas")
         .attr("width", FRAME_WIDTH)
         .attr("height", FRAME_HEIGHT)
         .style("background-color", COLOUR_MARGIN);
 
       // get the canvas context so it can be passed into the geopath renderer
       const context = canvas.node().getContext("2d");
+
+      // shift the 0,0 starting point for rendering to the edge of the margin
+      context.setTransform(1, 0, 0, 1, MARGIN, MARGIN);
+
+      // setup the svg
+      const svg = d3
+        .select("#frame")
+        .append("svg")
+        .attr("id", "map-svg")
+        .attr("width", FRAME_WIDTH)
+        .attr("height", FRAME_HEIGHT)
+        .attr("transform", `translate(${MARGIN}, ${MARGIN})`);
+
+      const g = svg.append("g");
     </script>
   </body>
 </html>
