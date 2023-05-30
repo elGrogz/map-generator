@@ -38,7 +38,7 @@
       const ISLAND_FONT = "Big Caslon";
 
       const MAP_BORDER_THICKNESS = 10;
-      const WATER_SHADOW_BLUR_THICKNESS = 10;
+      const WATER_SHADOW_BLUR_THICKNESS = 30;
 
       const MAP_BOUNDING_COORDS = {
         topX: -1.72, // longitude (minus is west of 0 - London)
@@ -112,7 +112,6 @@
       function drawPolygons(coordinates) {
         coordinates.forEach((coords) => {
           coords.forEach((point, i) => {
-            console.log("drawing");
             const [x, y] = projection(point);
             if (i === 0) {
               context.moveTo(x, y);
