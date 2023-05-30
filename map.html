@@ -124,7 +124,26 @@
         context.closePath();
       }
 
-      function clipCanvasToRectangle() {}
+      function clipCanvasToRectangle() {
+        let [topX, topY] = projection([
+          MAP_BOUNDING_COORDS.topX,
+          MAP_BOUNDING_COORDS.topY,
+        ]);
+
+        console.log([topX, topY]);
+
+        let [bottomX, bottomY] = projection([
+          MAP_BOUNDING_COORDS.bottomX,
+          MAP_BOUNDING_COORDS.bottomY,
+        ]);
+        console.log([bottomX, bottomY]);
+
+        const width = bottomX - topX;
+        const height = bottomY - topY;
+
+        console.log(width);
+        console.log(height);
+      }
 
       function drawSea() {
         context.fillStyle = COLOUR_WATER;
@@ -155,6 +174,8 @@
 
         drawSea();
         drawCoastline();
+
+        clipCanvasToRectangle();
       }
 
       drawMap();
