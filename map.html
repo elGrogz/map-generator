@@ -24,7 +24,7 @@
       const WIDTH = FRAME_WIDTH - 2 * MARGIN;
       const HEIGHT = FRAME_HEIGHT - 2 * MARGIN;
 
-      const MAP_SCALE = 500000; // sets the zoom for the map
+      const MAP_SCALE = 300000; // sets the zoom for the map
       const GRATICULE_DEGREE_STEP = [0.4, 0.2]; // sets the intervals for longitude and latitude graticules in degree steps
 
       const COLOUR_MARGIN = "#293743";
@@ -48,16 +48,16 @@
       };
 
       // setup the svg
-      //   const svg = d3
-      //     .select("#frame")
-      //     .append("svg")
-      //     .attr("id", "map-svg")
-      //     .style("position", "absolute")
-      //     .attr("width", FRAME_WIDTH)
-      //     .attr("height", FRAME_HEIGHT);
-      //   // .attr("transform", `translate(${MARGIN}, ${MARGIN})`);
+      const svg = d3
+        .select("#frame")
+        .append("svg")
+        .attr("id", "map-svg")
+        .style("position", "absolute")
+        .attr("width", FRAME_WIDTH)
+        .attr("height", FRAME_HEIGHT);
+      // .attr("transform", `translate(${MARGIN}, ${MARGIN})`);
 
-      //   const g = svg.append("g");
+      const g = svg.append("g");
 
       // setup the canvas
       const canvas = d3
@@ -125,24 +125,9 @@
       }
 
       function clipCanvasToRectangle() {
-        let [topX, topY] = projection([
-          MAP_BOUNDING_COORDS.topX,
-          MAP_BOUNDING_COORDS.topY,
-        ]);
-
-        console.log([topX, topY]);
-
-        let [bottomX, bottomY] = projection([
-          MAP_BOUNDING_COORDS.bottomX,
-          MAP_BOUNDING_COORDS.bottomY,
-        ]);
-        console.log([bottomX, bottomY]);
-
-        const width = bottomX - topX;
-        const height = bottomY - topY;
-
-        console.log(width);
-        console.log(height);
+        context.beginPath();
+        context.rect(0, 0, WIDTH, HEIGHT);
+        context.clip();
       }
 
       function drawSea() {
@@ -170,12 +155,11 @@
       async function drawMap() {
         await fetchGeoData();
 
-        console.log({ coastline });
-
-        drawSea();
-        drawCoastline();
+        // console.log({ coastline });
 
         clipCanvasToRectangle();
+        drawSea();
+        drawCoastline();
       }
 
       drawMap();
