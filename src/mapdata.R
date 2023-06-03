@@ -1,7 +1,11 @@
 install.packages(c("ggplot2", "sf"))
 
 library("ggplot2")
-library("sf")
+library("sf") # general mapping
+library("geodata") # get gadm data (administrative data per country)
+library("elevatr") # get elevation data
+library("raster") # get contour lines from elevation data
+library("geojsonio")
 
 # COASTLINE
 
@@ -24,9 +28,27 @@ coastline_intersect <- osm_coastline %>% st_crop(bb_rect)
 
 # Plot the coastline - Takes a while
 ggplot() +
-  geom_sf(data = coastline_intersect) +
+  geom_sf(data = france) +
   xlab("Longitude") + ylab("Latitude") + theme_minimal()
 
 st_write(coastline_intersect, "~/dev/projects/map-generator/data/il-de-re-coastline.geojson", detele_dsn = T)
 
 # END OF COASTLINE
+
+# START OF ELEVATION/CONTOURS
+
+france <- gadm(country = "France", level = 1, path = "MapData")
+region <- france[10]
+
+bounding_longitude <- c(longitude[1], longitude[2], longitude[2], longitude[1])
+bounding_latitude <- c(latitude[1], latitude[2], latitude[2], latitude[1])
+bbox_charentes <- vect(cbind(id = 1, part = 1, bounding_longitude, bounding_latitude),type = "polygons", crs = "+proj=longlat +datum=WGS84")
+
+ildere <- intersect(region, bbox_charentes)
+plot(region)
+
+region_sf <- st_as_sf(region)
+elevation_region <- get_elev_raster(region_sf, z = 11, clip = "bbox")
+plot(elevation_region, col = grey(1:100))
+
+# END OF ELEVATION/CONTOURS
