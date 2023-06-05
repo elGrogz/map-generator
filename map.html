@@ -24,8 +24,8 @@
       const WIDTH = FRAME_WIDTH - 2 * MARGIN;
       const HEIGHT = FRAME_HEIGHT - 2 * MARGIN;
 
-      const MAP_SCALE = 500000; // sets the zoom for the map
-      const GRATICULE_DEGREE_STEP = [0.4, 0.2]; // sets the intervals for longitude and latitude graticules in degree steps
+      const MAP_SCALE = 200000; // sets the zoom for the map
+      const GRATICULE_DEGREE_STEP = [0.1, 0.1]; // sets the intervals for longitude and latitude graticules in degree steps
 
       const COLOUR_MARGIN = "#293743";
       const COLOUR_MAP_BORDER = "#2e3f4c";
@@ -33,6 +33,7 @@
       const COLOUR_WATER_SHADOW = "#080b0e";
       const COLOUR_LAND = "#c9dfe7";
       const COLOUR_ISLAND_LABEL = "#9F8772";
+      const COLOUR_GRATICULE = "#867070";
 
       const CITY_FONT = "Gill Sans";
       const ISLAND_FONT = "Big Caslon";
@@ -134,6 +135,21 @@
         context.fillRect(0, 0, WIDTH, HEIGHT);
       }
 
+      function drawGraticules() {
+        const graticules = d3
+          .geoGraticule()
+          .step(GRATICULE_DEGREE_STEP)
+          .precision(0.4)();
+        console.log({ graticules });
+
+        context.strokeStyle = COLOUR_GRATICULE;
+        context.lineWidth = 0.75;
+        context.beginPath();
+        geoPathGenerator(graticules);
+        context.stroke();
+        context.closePath();
+      }
+
       function drawCoastline() {
         context.fillStyle = COLOUR_LAND;
         context.shadowBlur = WATER_SHADOW_BLUR_THICKNESS;
@@ -159,6 +175,7 @@
         clipCanvasToRectangle();
         drawSea();
         drawCoastline();
+        drawGraticules();
       }
 
       drawMap();
