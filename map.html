@@ -24,8 +24,8 @@
       const WIDTH = FRAME_WIDTH - 2 * MARGIN;
       const HEIGHT = FRAME_HEIGHT - 2 * MARGIN;
 
-      const MAP_SCALE = 200000; // sets the zoom for the map
-      const GRATICULE_DEGREE_STEP = [0.1, 0.1]; // sets the intervals for longitude and latitude graticules in degree steps
+      const MAP_SCALE = 450000; // sets the zoom for the map
+      const GRATICULE_DEGREE_STEP = [0.075, 0.05]; // sets the intervals for longitude and latitude graticules in degree steps
 
       const COLOUR_MARGIN = "#293743";
       const COLOUR_MAP_BORDER = "#2e3f4c";
@@ -139,7 +139,11 @@
         const graticules = d3
           .geoGraticule()
           .step(GRATICULE_DEGREE_STEP)
-          .precision(0.4)();
+          .extent([
+            [MAP_BOUNDING_COORDS.bottomX, MAP_BOUNDING_COORDS.bottomY],
+            [MAP_BOUNDING_COORDS.topX, MAP_BOUNDING_COORDS.topY],
+          ])
+          .precision(0.2)();
         console.log({ graticules });
 
         context.strokeStyle = COLOUR_GRATICULE;
@@ -174,8 +178,8 @@
 
         clipCanvasToRectangle();
         drawSea();
-        drawCoastline();
         drawGraticules();
+        drawCoastline();
       }
 
       drawMap();
