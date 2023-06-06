@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <title>Map Generator</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <!-- <script  src="./renderer.js"></script> -->
+    <script src="mapUtils.js"></script>
+    <script src="mapShapeRenderer.js"></script>
+    <script src="graticules.js"></script>
   </head>
   <body>
-    <div id="frame">
-      <!-- <svg></svg> -->
-    </div>
+    <div id="frame"></div>
 
     <script>
       // Il de Ré
@@ -110,72 +110,8 @@
         ]);
       }
 
-      function drawPolygons(coordinates) {
-        coordinates.forEach((coords) => {
-          coords.forEach((point, i) => {
-            const [x, y] = projection(point);
-            if (i === 0) {
-              context.moveTo(x, y);
-            } else {
-              context.lineTo(x, y);
-            }
-          });
-        });
-        context.closePath();
-      }
-
-      function clipCanvasToRectangle() {
-        context.beginPath();
-        context.rect(0, 0, WIDTH, HEIGHT);
-        context.clip();
-      }
-
-      function drawSea() {
-        context.fillStyle = COLOUR_WATER;
-        context.fillRect(0, 0, WIDTH, HEIGHT);
-      }
-
-      function drawGraticules() {
-        const graticules = d3
-          .geoGraticule()
-          .step(GRATICULE_DEGREE_STEP)
-          .extent([
-            [MAP_BOUNDING_COORDS.bottomX, MAP_BOUNDING_COORDS.bottomY],
-            [MAP_BOUNDING_COORDS.topX, MAP_BOUNDING_COORDS.topY],
-          ])
-          .precision(0.2)();
-        console.log({ graticules });
-
-        context.strokeStyle = COLOUR_GRATICULE;
-        context.lineWidth = 0.75;
-        context.beginPath();
-        geoPathGenerator(graticules);
-        context.stroke();
-        context.closePath();
-      }
-
-      function drawCoastline() {
-        context.fillStyle = COLOUR_LAND;
-        context.shadowBlur = WATER_SHADOW_BLUR_THICKNESS;
-        context.shadowColor = COLOUR_WATER_SHADOW;
-
-        context.beginPath();
-
-        coastline.features.forEach((feature) => {
-          if (feature.geometry.type === "Polygon") {
-            drawPolygons(feature.geometry.coordinates);
-          }
-        });
-
-        context.stroke();
-        context.fill();
-      }
-
       async function drawMap() {
         await fetchGeoData();
-
-        // console.log({ coastline });
-
         clipCanvasToRectangle();
         drawSea();
         drawGraticules();
