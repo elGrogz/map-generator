@@ -1,5 +1,8 @@
-let uniqueLongitudeGraticuleCoords = [];
-let uniqueLatitudeGraticuleCoords = [];
+// let uniqueLongitudeGraticuleCoords = [];
+// let uniqueLatitudeGraticuleCoords = [];
+
+let longitudeGraticuleCoords = new Set();
+let latitudeGraticuleCoords = new Set();
 
 function drawGraticules() {
   const graticules = d3
@@ -11,25 +14,7 @@ function drawGraticules() {
     ])
     .precision(0.1)();
 
-  graticules.coordinates.forEach((coordinates) => {
-    coordinates.forEach((coordinate) => {
-      const longCoord = coordinate[0].toFixed(4);
-      const latCoord = coordinate[1].toFixed(4);
-
-      if (!uniqueLongitudeGraticuleCoords.includes(longCoord)) {
-        uniqueLongitudeGraticuleCoords.push(longCoord);
-      }
-
-      if (!uniqueLatitudeGraticuleCoords.includes(latCoord)) {
-        uniqueLatitudeGraticuleCoords.push(latCoord);
-      }
-    });
-
-    console.log({ uniqueLatitudeGraticuleCoords });
-    console.log({ uniqueLongitudeGraticuleCoords });
-  });
-
-  // console.log({ graticules });
+  getUniqueGraticuleCoordindates(graticules);
 
   context.strokeStyle = COLOUR_GRATICULE;
   context.lineWidth = 0.75;
@@ -39,6 +24,22 @@ function drawGraticules() {
   context.closePath();
 }
 
-function drawGraticuleLabels() {}
+function drawGraticuleLabels() {
+  longitudeGraticuleCoords = [];
+}
 
 function drawGraticuleCrosses() {}
+
+function getUniqueGraticuleCoordindates(graticules) {
+  graticules.coordinates.forEach((coordinates) => {
+    coordinates.forEach((coordinate) => {
+      const longCoord = coordinate[0].toFixed(4);
+      const latCoord = coordinate[1].toFixed(4);
+
+      longitudeGraticuleCoords.add(longCoord);
+      latitudeGraticuleCoords.add(latCoord);
+    });
+  });
+
+  console.log(longitudeGraticuleCoords);
+}

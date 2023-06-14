@@ -101,12 +101,14 @@
       let forests;
       let island_points;
 
+      // get all the geodata
       async function fetchGeoData() {
         await Promise.all([
           (coastline = await d3.json("./data/il-de-re-coastline.geojson")),
         ]);
       }
 
+      // render the map (could make these conditional depending if the data/consts required are present
       async function drawMap() {
         await fetchGeoData();
         clipCanvasToRectangle();
