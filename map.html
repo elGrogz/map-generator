@@ -6,7 +6,7 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="mapUtils.js"></script>
     <script src="mapShapeRenderer.js"></script>
-    <script src="graticules.js"></script>
+    <script src="graticuleRenderer.js"></script>
   </head>
   <body>
     <div id="frame"></div>
@@ -92,9 +92,6 @@
         .context(context);
 
       // set up data for later use
-      let longitudeGraticuleCoords;
-      let latitudeGraticuleCoords;
-
       let coastline;
       let contours;
       let water_lines;
