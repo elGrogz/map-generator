@@ -1,5 +1,5 @@
-let uniquelongitudeGraticuleCoords = [];
-let uniquelatitudeGraticuleCoords = [];
+let uniqueLongitudeGraticuleCoords = [];
+let uniqueLatitudeGraticuleCoords = [];
 
 function drawGraticules() {
   const graticules = d3
@@ -12,22 +12,21 @@ function drawGraticules() {
     .precision(0.1)();
 
   graticules.coordinates.forEach((coordinates) => {
-    console.log({ coordinates });
     coordinates.forEach((coordinate) => {
-      const longCoord = coordinate[0];
-      const latCoord = coordinate[1];
+      const longCoord = coordinate[0].toFixed(4);
+      const latCoord = coordinate[1].toFixed(4);
 
-      if (!uniquelatitudeGraticuleCoords.includes(longCoord)) {
-        uniquelongitudeGraticuleCoords.push(longCoord);
+      if (!uniqueLongitudeGraticuleCoords.includes(longCoord)) {
+        uniqueLongitudeGraticuleCoords.push(longCoord);
       }
 
-      if (!uniquelatitudeGraticuleCoords.includes(latCoord)) {
-        uniquelatitudeGraticuleCoords.push(latCoord);
+      if (!uniqueLatitudeGraticuleCoords.includes(latCoord)) {
+        uniqueLatitudeGraticuleCoords.push(latCoord);
       }
     });
 
-    console.log({ uniquelatitudeGraticuleCoords });
-    console.log({ uniquelongitudeGraticuleCoords });
+    console.log({ uniqueLatitudeGraticuleCoords });
+    console.log({ uniqueLongitudeGraticuleCoords });
   });
 
   // console.log({ graticules });
