@@ -4,6 +4,7 @@
 let longitudeGraticuleCoords = new Set();
 let latitudeGraticuleCoords = new Set();
 
+// draw graticules using geoGraticule on the canvas
 function drawGraticules() {
   const graticules = d3
     .geoGraticule()
@@ -22,10 +23,62 @@ function drawGraticules() {
   geoPathGenerator(graticules);
   context.stroke();
   context.closePath();
+
+  drawGraticuleLabels();
 }
 
+// draw graticule coordinates on the map's edge on the SVG
 function drawGraticuleLabels() {
-  longitudeGraticuleCoords = [];
+  const graticuleLabelsGroup = g
+    .append("g")
+    .attr("id", "graticule-label-group")
+    .attr("fill", COLOUR_GRATICULE_LABEL)
+    .attr("font-size", 30)
+    .attr("font-style", "Italic")
+    .style("text-anchor", "middle")
+    .style("font-family", `${CITY_FONT}`);
+
+  longtitudeGraticuleCoordArray = Array.from(longitudeGraticuleCoords);
+  latitudeGraticuleCoordArray = Array.from(latitudeGraticuleCoords);
+
+  const xLongtitudeCoordData = longtitudeGraticuleCoordArray.map((coord) => {
+    const [topX, topY] = projection([coord, MAP_BOUNDING_COORDS.topY]);
+    const [bottomX, bottomY] = projection([coord, MAP_BOUNDING_COORDS.bottomY]);
+
+    return {
+      mode: "longitude",
+      coord: coord,
+      topX: topX,
+      topY: topY,
+      bottomX: bottomX,
+      bottomY: bottomY,
+    };
+  });
+
+  const yLatitudeCoordData = latitudeGraticuleCoordArray.map((coord) => {
+    const [topX, topY] = projection([MAP_BOUNDING_COORDS.topX, coord]);
+    const [bottomX, bottomY] = projection([MAP_BOUNDING_COORDS.bottomX, coord]);
+
+    return {
+      mode: "latitude",
+      coord: coord,
+      topX: topX,
+      topY: topY,
+      bottomX: bottomX,
+      bottomY: bottomY,
+    };
+  });
+
+  console.log({ xLongtitudeCoordData });
+  console.log({ yLatitudeCoordData });
+
+  const xGraticuleLabelGroup = graticuleLabelsGroup
+    .append("g")
+    .attr("id", "x-graticule-labels-group");
+
+  const yGraticuleLabelGroup = graticuleLabelsGroup
+    .append("g")
+    .attr("id", "y-graticule-labels-group");
 }
 
 function drawGraticuleCrosses() {}
@@ -40,6 +93,4 @@ function getUniqueGraticuleCoordindates(graticules) {
       latitudeGraticuleCoords.add(latCoord);
     });
   });
-
-  console.log(longitudeGraticuleCoords);
 }
