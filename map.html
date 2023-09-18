@@ -24,8 +24,8 @@
       const WIDTH = FRAME_WIDTH - 2 * MARGIN;
       const HEIGHT = FRAME_HEIGHT - 2 * MARGIN;
 
-      const MAP_SCALE = 200000; // sets the zoom for the map
-      const GRATICULE_DEGREE_STEP = [0.075, 0.05]; // sets the intervals for longitude and latitude graticules in degree steps
+      const MAP_SCALE = 210000; // sets the zoom for the map
+      const GRATICULE_DEGREE_STEP = [0.2, 0.1]; // sets the intervals for longitude and latitude graticules in degree steps
 
       const COLOUR_MARGIN = "#293743";
       const COLOUR_MAP_BORDER = "#2e3f4c";
@@ -111,6 +111,13 @@
 
       // render the map (could make these conditional depending if the data/consts required are present
       async function drawMap() {
+        // let config;
+        const config = await fetch("mapConfig.json").then((response) => {
+          return response.json();
+        });
+
+        console.log(config);
+
         await fetchGeoData();
         clipCanvasToRectangle();
         drawSea();

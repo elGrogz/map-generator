@@ -15,10 +15,12 @@ function drawGraticules() {
     ])
     .precision(0.1)();
 
+  // console.log({ graticules });
+
   getUniqueGraticuleCoordindates(graticules);
 
   context.strokeStyle = COLOUR_GRATICULE;
-  context.lineWidth = 0.75;
+  context.lineWidth = 2;
   context.beginPath();
   geoPathGenerator(graticules);
   context.stroke();
@@ -40,6 +42,8 @@ function drawGraticuleLabels() {
 
   longtitudeGraticuleCoordArray = Array.from(longitudeGraticuleCoords);
   latitudeGraticuleCoordArray = Array.from(latitudeGraticuleCoords);
+
+  // console.log(longtitudeGraticuleCoordArray);
 
   const xLongtitudeCoordData = longtitudeGraticuleCoordArray.map((coord) => {
     const [topX, topY] = projection([coord, MAP_BOUNDING_COORDS.topY]);
@@ -69,12 +73,31 @@ function drawGraticuleLabels() {
     };
   });
 
-  console.log({ xLongtitudeCoordData });
-  console.log({ yLatitudeCoordData });
+  // console.log({ xLongtitudeCoordData });
+  // console.log({ yLatitudeCoordData });
 
   const xGraticuleLabelGroup = graticuleLabelsGroup
     .append("g")
     .attr("id", "x-graticule-labels-group");
+
+  const xGraticuleLabelElements = xGraticuleLabelGroup
+    .selectAll(".x-graticule-labels-group")
+    .data(xLongtitudeCoordData)
+    .join("g");
+
+  xGraticuleLabelElements
+    .append("text")
+    .attr("class", "top-x-graticule-label")
+    .attr("x", (d) => d.topX)
+    .attr("y", (d) => d.topY)
+    .text((d) => d.coord);
+
+  xGraticuleLabelElements
+    .append("text")
+    .attr("class", "bottom-x-graticule-label")
+    .attr("x", (d) => d.bottomX)
+    .attr("y", (d) => d.bottomY)
+    .text((d) => d.coord);
 
   const yGraticuleLabelGroup = graticuleLabelsGroup
     .append("g")
@@ -85,6 +108,9 @@ function drawGraticuleCrosses() {}
 
 function getUniqueGraticuleCoordindates(graticules) {
   graticules.coordinates.forEach((coordinates) => {
+    console.log({ coordinates });
+
+    // if (coordinates.length === 2) {
     coordinates.forEach((coordinate) => {
       const longCoord = coordinate[0].toFixed(4);
       const latCoord = coordinate[1].toFixed(4);
@@ -92,5 +118,6 @@ function getUniqueGraticuleCoordindates(graticules) {
       longitudeGraticuleCoords.add(longCoord);
       latitudeGraticuleCoords.add(latCoord);
     });
+    // }
   });
 }
