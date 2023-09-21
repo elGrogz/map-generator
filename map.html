@@ -43,10 +43,10 @@
       const WATER_SHADOW_BLUR_THICKNESS = 30;
 
       const MAP_BOUNDING_COORDS = {
-        topX: -1.72, // longitude (minus is west of 0 - London)
-        topY: 46.36, // latitude (higher is more northerly)
-        bottomX: -1.036, // longitude
-        bottomY: 46.023, // latitude
+        topX: -26, // longitude (minus is west of 0 - London)
+        topY: 38, // latitude (higher is more northerly)
+        bottomX: -25, // longitude
+        bottomY: 37.6, // latitude
       };
 
       // setup the svg
@@ -105,7 +105,9 @@
       // get all the geodata
       async function fetchGeoData() {
         await Promise.all([
-          (coastline = await d3.json("./data/il-de-re-coastline.geojson")),
+          // (coastline = await d3.json("./data/il-de-re-coastline.geojson")),
+          (coastline = await d3.json("./data/sao-miguel-coastline.geojson")),
+          (contours = await d3.json("./data/sao-miguel-elevation.geojson")),
         ]);
       }
 
@@ -119,6 +121,7 @@
         console.log(config);
 
         await fetchGeoData();
+        console.log({ contours });
         clipCanvasToRectangle();
         drawSea();
         drawGraticules();

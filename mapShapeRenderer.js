@@ -19,3 +19,9 @@ function drawCoastline() {
   context.stroke();
   context.fill();
 }
+
+function drawContours() {
+  contours.features.forEach((feature) => {
+    console.log({ feature });
+  });
+}
