@@ -37,10 +37,13 @@ function drawContours() {
     const level = +contour.properties.level;
 
     // https://maketintsandshades.com/#93BFCF
-    if (level >= 50 && level <= 99) {
+    // if (level >= 50 && level <= 99) {
+    //   fillShade = "#bed9e2";
+    // } else if (level >= 100 && level <= 199) {
+    //   fillShade = "#b3d2dd";
+    // fillShade = "#bed9e2";
+    if (level <= 199) {
       fillShade = "#bed9e2";
-    } else if (level >= 100 && level <= 199) {
-      fillShade = "#b3d2dd";
     } else if (level >= 200 && level <= 299) {
       fillShade = "#a9ccd9";
     } else if (level >= 300 && level <= 399) {
@@ -69,28 +72,28 @@ function drawContours() {
 
     context.fillStyle = fillShade;
 
-    const lw = thickLevels.indexOf(level) > 0 ? 3 : 1.5;
+    // const lw = thickLevels.indexOf(level) > 0 ? 3 : 1.5;
 
-    context.lineWidth = lw;
+    context.lineWidth = 1;
 
     // console.log(
     //   `canvas fill style for ${contour.properties.level}`,
     //   context.fillStyle
     // );
 
-    context.stroke();
     context.fill();
-    context.restore();
-
-    // context.save();
-    // context.beginPath();
-    // context.clip();
-    // coastline.features.forEach((feature) => {
-    //   if (feature.geometry.type === "Polygon") {
-    //     drawPolygons(feature.geometry.coordinates);
-    //   }
-    // });
-    // context.stroke();
-    // context.restore();
+    context.stroke();
   });
+  context.restore();
+
+  // context.save();
+  // context.beginPath();
+  // context.clip();
+  // coastline.features.forEach((feature) => {
+  //   if (feature.geometry.type === "Polygon") {
+  //     drawPolygons(feature.geometry.coordinates);
+  //   }
+  // });
+  // context.stroke();
+  // context.restore();
 }

@@ -63,14 +63,14 @@ region <- portugal[2]
 
 #azores <- intersect(region, bbox_azores)
 #region_sf <- st_as_sf(region)
-raster_intersect <- region_sf %>% st_crop(bb_rect)
+raster_intersect <- coastline_intersect %>% st_crop(bb_rect)
 plot(raster_intersect)
 
 #region_sf <- st_as_sf(region)
 elevation_region <- get_elev_raster(raster_intersect, z = 12, clip = "bbox")
 plot(elevation_region, col = grey(1:100/100))
   
-breaks <- seq(from = 200, to = 1500, by = 200)
+breaks <- seq(from = 200, to = 1500, by = 100)
 contour_sao_miguel <- rasterToContour(elevation_region, maxpixels = 1000000, levels = breaks)
 plot(contour_sao_miguel, lwd = 0.8, col = "#606060")
 geojson_write(geojson_json(contour_sao_miguel), file = "~/dev/projects/map-generator/data/sao-miguel-elevation.geojson")
