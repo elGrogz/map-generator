@@ -108,7 +108,7 @@ function drawGraticuleCrosses() {}
 
 function getUniqueGraticuleCoordindates(graticules) {
   graticules.coordinates.forEach((coordinates) => {
-    console.log({ coordinates });
+    // console.log({ coordinates });
 
     // if (coordinates.length === 2) {
     coordinates.forEach((coordinate) => {

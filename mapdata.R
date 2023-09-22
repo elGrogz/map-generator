@@ -62,7 +62,7 @@ region <- portugal[2]
 #bbox_azores <- vect(cbind(id = 1, part = 1, bounding_longitude, bounding_latitude),type = "polygons", crs = "+proj=longlat +datum=WGS84")
 
 #azores <- intersect(region, bbox_azores)
-region_sf <- st_as_sf(region)
+#region_sf <- st_as_sf(region)
 raster_intersect <- region_sf %>% st_crop(bb_rect)
 plot(raster_intersect)
 
@@ -70,9 +70,10 @@ plot(raster_intersect)
 elevation_region <- get_elev_raster(raster_intersect, z = 12, clip = "bbox")
 plot(elevation_region, col = grey(1:100/100))
   
-breaks <- seq(from = 100, to = 1500, by = 100)
+breaks <- seq(from = 200, to = 1500, by = 200)
 contour_sao_miguel <- rasterToContour(elevation_region, maxpixels = 1000000, levels = breaks)
 plot(contour_sao_miguel, lwd = 0.8, col = "#606060")
+geojson_write(geojson_json(contour_sao_miguel), file = "~/dev/projects/map-generator/data/sao-miguel-elevation.geojson")
 
 # END OF ELEVATION/CONTOURS
 
@@ -95,5 +96,6 @@ ggplot() +
   xlab("Longitude") + ylab("Latitude") + theme_minimal()
   
   
-
+st_write(lakes, "~/dev/projects/map-generator/data/sao-miguel-lakes.geojson", detele_dsn = T)
+st_write(multilakes, "~/dev/projects/map-generator/data/sao-miguel-multillakes.geojson", detele_dsn = T)
 # END OF LAKES

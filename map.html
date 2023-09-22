@@ -118,14 +118,15 @@
           return response.json();
         });
 
-        console.log(config);
+        // console.log(config);
 
         await fetchGeoData();
-        console.log({ contours });
+        // console.log({ contours });
         clipCanvasToRectangle();
         drawSea();
         drawGraticules();
         drawCoastline();
+        drawContours();
       }
 
       drawMap();
