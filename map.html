@@ -108,6 +108,10 @@
           // (coastline = await d3.json("./data/il-de-re-coastline.geojson")),
           (coastline = await d3.json("./data/sao-miguel-coastline.geojson")),
           (contours = await d3.json("./data/sao-miguel-elevation.geojson")),
+          (water_polygons = await d3.json(
+            "./data/sao-miguel-multillakes.geojson"
+          )),
+          (water_lines = await d3.json("./data/sao-miguel-lakes.geojson")),
         ]);
       }
 
@@ -121,12 +125,15 @@
         // console.log(config);
 
         await fetchGeoData();
-        // console.log({ contours });
+        console.log({ water_polygons });
         clipCanvasToRectangle();
         drawSea();
         drawGraticules();
         drawCoastline();
         drawContours();
+        // console.log({ water_polygons });
+        drawWaterPolygons();
+        drawWaterLines();
       }
 
       drawMap();

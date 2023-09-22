@@ -97,3 +97,59 @@ function drawContours() {
   // context.stroke();
   // context.restore();
 }
+
+function drawWaterPolygons() {
+  context.save();
+  context.fillStyle = COLOUR_WATER;
+  // context.fillStyle = "#FFB4B4";
+
+  // const gradient = context.createLinearGradient(0, HEIGHT, 0, 0);
+
+  // gradient.addColorStop(0, "#95BDFF");
+  // gradient.addColorStop(0.3, "#B4E4FF");
+  // gradient.addColorStop(0.6, "#B4E4FF");
+  // gradient.addColorStop(1, "#95BDFF");
+
+  // context.fillStyle = gradient;
+  console.log({ water_polygons });
+
+  water_polygons.features.forEach((feature) => {
+    context.beginPath();
+    if (feature.geometry.type === "MultiPolygon") {
+      feature.geometry.coordinates.forEach((lines) => {
+        drawPolygons(lines);
+      });
+      // drawPolygons(feature.geometry.coordinates);
+    }
+    context.fill();
+  });
+  context.restore();
+}
+
+function drawWaterLines() {
+  context.save();
+  context.fillStyle = COLOUR_WATER;
+  // context.fillStyle = "#FFB4B4";
+
+  // const gradient = context.createLinearGradient(0, HEIGHT, 0, 0);
+
+  // gradient.addColorStop(0, "#95BDFF");
+  // gradient.addColorStop(0.3, "#B4E4FF");
+  // gradient.addColorStop(0.6, "#B4E4FF");
+  // gradient.addColorStop(1, "#95BDFF");
+
+  // context.fillStyle = gradient;
+  // console.log({ water_polygons });
+
+  water_lines.features.forEach((feature) => {
+    context.beginPath();
+    if (feature.geometry.type === "Polygon") {
+      feature.geometry.coordinates.forEach((lines) => {
+        drawPolygons(lines);
+      });
+      // drawPolygons(feature.geometry.coordinates);
+    }
+    context.fill();
+  });
+  context.restore();
+}
