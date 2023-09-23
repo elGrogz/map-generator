@@ -15,5 +15,5 @@ function drawPolygons(coordinates) {
       }
     });
   });
-  context.closePath();
+  // context.closePath();
 }

@@ -29,7 +29,8 @@ function drawContours() {
 
   contours.features.forEach((contour) => {
     context.beginPath();
-    geoPathGenerator(contour);
+    // geoPathGenerator(contour);
+    drawPolygons(contour.geometry.coordinates);
     // console.log("canvas", { context });
 
     let fillShade;
@@ -72,9 +73,9 @@ function drawContours() {
 
     context.fillStyle = fillShade;
 
-    // const lw = thickLevels.indexOf(level) > 0 ? 3 : 1.5;
+    const lw = thickLevels.indexOf(level) > 0 ? 2 : 1;
 
-    context.lineWidth = 1;
+    context.lineWidth = lw;
 
     // console.log(
     //   `canvas fill style for ${contour.properties.level}`,
@@ -83,6 +84,7 @@ function drawContours() {
 
     context.fill();
     context.stroke();
+    context.closePath();
   });
   context.restore();
 
@@ -98,6 +100,35 @@ function drawContours() {
   // context.restore();
 }
 
+function drawWaterMultiPolygons() {
+  context.save();
+  context.fillStyle = COLOUR_WATER;
+  // context.fillStyle = "#FFB4B4";
+
+  // const gradient = context.createLinearGradient(0, HEIGHT, 0, 0);
+
+  // gradient.addColorStop(0, "#95BDFF");
+  // gradient.addColorStop(0.3, "#B4E4FF");
+  // gradient.addColorStop(0.6, "#B4E4FF");
+  // gradient.addColorStop(1, "#95BDFF");
+
+  // context.fillStyle = gradient;
+  // console.log({ water_multipolygons });
+
+  water_multipolygons.features.forEach((feature) => {
+    context.beginPath();
+    if (feature.geometry.type === "MultiPolygon") {
+      feature.geometry.coordinates.forEach((lines) => {
+        drawPolygons(lines);
+      });
+      // drawPolygons(feature.geometry.coordinates);
+    }
+    context.fill();
+    context.closePath();
+  });
+  context.restore();
+}
+
 function drawWaterPolygons() {
   context.save();
   context.fillStyle = COLOUR_WATER;
@@ -111,45 +142,16 @@ function drawWaterPolygons() {
   // gradient.addColorStop(1, "#95BDFF");
 
   // context.fillStyle = gradient;
-  console.log({ water_polygons });
 
   water_polygons.features.forEach((feature) => {
     context.beginPath();
-    if (feature.geometry.type === "MultiPolygon") {
-      feature.geometry.coordinates.forEach((lines) => {
-        drawPolygons(lines);
-      });
-      // drawPolygons(feature.geometry.coordinates);
-    }
-    context.fill();
-  });
-  context.restore();
-}
-
-function drawWaterLines() {
-  context.save();
-  context.fillStyle = COLOUR_WATER;
-  // context.fillStyle = "#FFB4B4";
-
-  // const gradient = context.createLinearGradient(0, HEIGHT, 0, 0);
-
-  // gradient.addColorStop(0, "#95BDFF");
-  // gradient.addColorStop(0.3, "#B4E4FF");
-  // gradient.addColorStop(0.6, "#B4E4FF");
-  // gradient.addColorStop(1, "#95BDFF");
-
-  // context.fillStyle = gradient;
-  // console.log({ water_polygons });
-
-  water_lines.features.forEach((feature) => {
-    context.beginPath();
     if (feature.geometry.type === "Polygon") {
-      feature.geometry.coordinates.forEach((lines) => {
-        drawPolygons(lines);
-      });
-      // drawPolygons(feature.geometry.coordinates);
+      // console.log({ feature });
+      // geoPathGenerator(feature);
+      drawPolygons(feature.geometry.coordinates);
     }
     context.fill();
+    context.closePath();
   });
   context.restore();
 }

@@ -95,8 +95,8 @@
       // set up data for later use
       let coastline;
       let contours;
-      let water_lines;
       let water_polygons;
+      let water_multipolygons;
       let roads;
       let cities;
       let forests;
@@ -108,10 +108,10 @@
           // (coastline = await d3.json("./data/il-de-re-coastline.geojson")),
           (coastline = await d3.json("./data/sao-miguel-coastline.geojson")),
           (contours = await d3.json("./data/sao-miguel-elevation.geojson")),
-          (water_polygons = await d3.json(
+          (water_multipolygons = await d3.json(
             "./data/sao-miguel-multillakes.geojson"
           )),
-          (water_lines = await d3.json("./data/sao-miguel-lakes.geojson")),
+          (water_polygons = await d3.json("./data/sao-miguel-lakes.geojson")),
         ]);
       }
 
@@ -125,15 +125,16 @@
         // console.log(config);
 
         await fetchGeoData();
-        console.log({ water_polygons });
+        // console.log({ water_polygons });
         clipCanvasToRectangle();
         drawSea();
         drawGraticules();
         drawCoastline();
         drawContours();
+        // console.log({ water_multipolygons });
         // console.log({ water_polygons });
+        drawWaterMultiPolygons();
         drawWaterPolygons();
-        drawWaterLines();
       }
 
       drawMap();
