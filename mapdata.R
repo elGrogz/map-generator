@@ -1,4 +1,5 @@
 install.packages(c("ggplot2", "sf"))
+install.packages("mapview")
 
 library("ggplot2")
 library("sf") # general mapping
@@ -7,6 +8,8 @@ library("elevatr") # get elevation data
 library("raster") # get contour lines from elevation data
 library("geojsonio")
 library("osmdata")
+library("mapview")
+options("max.contour.segments"= 300000)
 
 # COASTLINE
 # coastline 1
@@ -28,8 +31,8 @@ osm_coastline2 <- st_make_valid(osm_coastline2)
 #latitude <- c(46.36, 46.023)
 #latitude <- c(37.968898, 37.640502)
 #longitude <- c(-25.926816, -25.027649)
-latitude <- c(38, 37.6)
 longitude <- c(-26, -25)
+latitude <- c(37.6, 38)
 
 
 # creates a data frame which is a collection of variables (like a matrix/list). Fundamental data structure for R
@@ -57,22 +60,33 @@ st_write(coastline_intersect, "~/dev/projects/map-generator/data/sao-miguel-coas
 portugal <- gadm(country = "Portugal", level = 1, path = "MapData")
 region <- portugal[2]
 
-#bounding_longitude <- c(longitude[1], longitude[2], longitude[2], longitude[1])
-#bounding_latitude <- c(latitude[2], latitude[1], latitude[1], latitude[2])
-#bbox_azores <- vect(cbind(id = 1, part = 1, bounding_longitude, bounding_latitude),type = "polygons", crs = "+proj=longlat +datum=WGS84")
+bounding_longitude <- c(longitude[1], longitude[2], longitude[2], longitude[1])
+bounding_latitude <- c(latitude[2], latitude[2], latitude[1], latitude[1])
+bbox_azores <- vect(cbind(id = 1, part = 1, bounding_longitude, bounding_latitude),type = "polygons", crs = "+proj=longlat +datum=WGS84")
+#bbox_azores <- vect(bb_rect)
 
-#azores <- intersect(region, bbox_azores)
+#azores <- crop(region, bbox_azores)
+sao_miguel <- intersect(region, bbox_azores)
+plot(sao_miguel)
+
+sao_miguel_sf <- st_as_sf(sao_miguel)
 #region_sf <- st_as_sf(region)
 raster_intersect <- coastline_intersect %>% st_crop(bb_rect)
-plot(raster_intersect)
+plot(sao_miguel)
+#sf_sao_miguel <- st_as_sf(azores)
+
 
 #region_sf <- st_as_sf(region)
-elevation_region <- get_elev_raster(raster_intersect, z = 12, clip = "bbox")
-plot(elevation_region, col = grey(1:100/100))
+sao_miguel_elevation <- get_elev_raster(sao_miguel_sf, z = 11, clip = "bbox")
+plot(sao_miguel_elevation)
   
-breaks <- seq(from = 200, to = 1500, by = 100)
-contour_sao_miguel <- rasterToContour(elevation_region, maxpixels = 1000000, levels = breaks)
-plot(contour_sao_miguel, lwd = 0.8, col = "#606060")
+breaks <- seq(from = 50, to = 1500, by = 50)
+contour_sao_miguel <- rasterToContour(sao_miguel_elevation, maxpixels = 50000, breaks)
+contour_sao_miguel <- rasterToContour(sao_miguel_elevation, nlevels=20) 
+mapview(contour_sao_miguel,legend=TRUE)
+sao_miguel_crop <- crop(contour_sao_miguel, sao_miguel)
+plot(contour_sao_miguel, lwd = 0.8)
+
 geojson_write(geojson_json(contour_sao_miguel), file = "~/dev/projects/map-generator/data/sao-miguel-elevation.geojson")
 
 # END OF ELEVATION/CONTOURS
