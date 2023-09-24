@@ -84,7 +84,12 @@ breaks <- seq(from = 50, to = 1500, by = 50)
 contour_sao_miguel <- rasterToContour(sao_miguel_elevation, maxpixels = 50000, breaks)
 contour_sao_miguel <- rasterToContour(sao_miguel_elevation, nlevels=20) 
 mapview(contour_sao_miguel,legend=TRUE)
-sao_miguel_crop <- crop(contour_sao_miguel, sao_miguel)
+
+sm_spat_vector <- vect(contour_sao_miguel)
+plot(sm_spat_vector)
+plot(sao_miguel)
+
+sao_miguel_crop <- intersect(sm_spat_vector, sao_miguel)
 plot(contour_sao_miguel, lwd = 0.8)
 
 geojson_write(geojson_json(contour_sao_miguel), file = "~/dev/projects/map-generator/data/sao-miguel-elevation.geojson")

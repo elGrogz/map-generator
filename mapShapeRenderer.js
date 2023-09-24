@@ -22,81 +22,147 @@ function drawCoastline() {
   context.restore();
 }
 
+const gradients = [
+  // "#5fc971",
+  // "#65bf66",
+  // "#69b55b",
+  // "#6cab51",
+  // "#6da148",
+  // "#6e9740",
+  // "#6e8d39",
+  // "#6d8432",
+  // "#6b7b2c",
+  // "#697226",
+  // "#666922",
+  // "#62601e",
+  // "#5e571a",
+  // "#594f17",
+  // "#544714",
+  // "#4f3f11",
+  // "#49370f",
+  // "#43300d",
+  // "#3d290a",
+  // "#362206",
+
+  "#6efa7b",
+  "#61f67f",
+  "#53f283",
+  "#44ee87",
+  "#32e98a",
+  "#1ae58e",
+  "#00e191",
+  "#00dc94",
+  "#00d896",
+  "#00d398",
+  "#00cf9a",
+  "#00ca9c",
+  "#00c69e",
+  "#00c19f",
+  "#00bca0",
+  "#00b7a0",
+  "#00b3a1",
+  "#00aea1",
+  "#00a9a0",
+  "#00a5a0",
+  "#00a09f",
+  "#009b9d",
+  "#00969c",
+  "#00919a",
+  "#008d97",
+  "#008895",
+  "#008392",
+  "#007e8f",
+  "#007a8c",
+  "#007588",
+  "#007084",
+  "#006c80",
+  "#00677c",
+  "#066277",
+  "#135e72",
+  "#1b596d",
+  "#215568",
+  "#255163",
+  "#284c5d",
+  "#2a4858",
+];
+
+// const gradients = [
+//   "#5fc971",
+//   "#63c56d",
+//   "#66c168",
+//   "#69be64",
+//   "#6cba61",
+//   "#6eb65d",
+//   "#70b259",
+//   "#72ae56",
+//   "#74ab53",
+//   "#75a750",
+//   "#76a34d",
+//   "#77a04a",
+//   "#789c48",
+//   "#789845",
+//   "#799543",
+//   "#799141",
+//   "#798e3f",
+//   "#798a3d",
+//   "#78863b",
+//   "#78833a",
+//   "#788038",
+//   "#777c37",
+//   "#767936",
+//   "#757535",
+//   "#747234",
+//   "#736f33",
+//   "#726b32",
+//   "#706831",
+//   "#6f6530",
+//   "#6d622f",
+//   "#6c5f2f",
+//   "#6a5c2e",
+//   "#68592e",
+//   "#66562d",
+//   "#64532c",
+//   "#62502c",
+//   "#5f4d2b",
+//   "#5d4a2b",
+//   "#5b482a",
+//   "#58452a",
+// ];
+
 function drawContours() {
   context.save();
   context.strokeStyle = "#5F7161";
   const thickLevels = [200, 400, 600, 800, 1000, 1200, 1400];
 
+  let shadeIndex = 0;
+
   contours.features.forEach((contour) => {
-    if (+contour.properties.level >= 50) {
-      context.beginPath();
-      // geoPathGenerator(contour);
-      drawPolygons(contour.geometry.coordinates);
-      // console.log("canvas", { context });
-
-      let fillShade;
-
+    if (+contour.properties.level >= 0) {
       const level = +contour.properties.level;
 
-      // https://maketintsandshades.com/#93BFCF
-      // if (level >= 50 && level <= 99) {
-      //   fillShade = "#bed9e2";
-      // } else if (level >= 100 && level <= 199) {
-      //   fillShade = "#b3d2dd";
-      // fillShade = "#bed9e2";
-      if (level <= 199) {
-        fillShade = "#bed9e2";
-      } else if (level >= 200 && level <= 299) {
-        fillShade = "#a9ccd9";
-      } else if (level >= 300 && level <= 399) {
-        fillShade = "#9ec5d4";
-      } else if (level >= 400 && level <= 499) {
-        fillShade = "#93bfcf";
-      } else if (level >= 500 && level <= 599) {
-        fillShade = "#84acba";
-      } else if (level >= 600 && level <= 699) {
-        fillShade = "#7699a6";
-      } else if (level >= 700 && level <= 799) {
-        fillShade = "#678691";
-      } else if (level >= 800 && level <= 899) {
-        fillShade = "#58737c";
-      } else if (level >= 900 && level <= 999) {
-        fillShade = "#4a6068";
-      } else if (level >= 1000 && level <= 1099) {
-        fillShade = "#3b4c53";
-      } else if (level >= 1100 && level <= 1199) {
-        fillShade = "#2c393e";
-      } else if (level >= 1200 && level <= 1299) {
-        fillShade = "#1d2629";
-      } else if (level >= 1300) {
-        fillShade = "#0f1315";
-      }
+      context.beginPath();
+      drawPolygons(contour.geometry.coordinates);
 
-      context.fillStyle = fillShade;
+      context.lineWidth = thickLevels.indexOf(level) > 0 ? 0.5 : 0.25;
+      context.fillStyle = gradients[shadeIndex] ?? "#bed9e2";
 
-      const lw = thickLevels.indexOf(level) > 0 ? 2 : 1;
-
-      context.lineWidth = lw;
-
-      // console.log(
-      //   `canvas fill style for ${contour.properties.level}`,
-      //   context.fillStyle
-      // );
+      console.log(shadeIndex);
+      console.log(gradients[shadeIndex]);
 
       context.fill();
       context.stroke();
+
+      shadeIndex++;
     }
 
+    // Clip anything outside the coastline - data can sometimes include random contours in the sea
     context.beginPath();
-
     coastline.features.forEach((feature) => {
       if (feature.geometry.type === "Polygon") {
         drawPolygons(feature.geometry.coordinates);
       }
     });
-
     context.clip();
-
     context.closePath();
   });
   context.restore();
